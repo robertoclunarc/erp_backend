@@ -80,6 +80,60 @@ export class ReportController {
     const data = await ReportModel.getCashRegisterSummary(branch_id as string);
     res.json(data);
   }
+
+  static async salesByDateRange(req: AuthRequest, res: Response) {
+    try {
+      const branchId = req.user?.branch_id;
+      const { start_date, end_date } = req.query;
+      if (!branchId || !start_date || !end_date) {
+        return res.status(400).json({ error: 'branch_id, start_date y end_date son requeridos' });
+      }
+      const data = await ReportModel.getSalesByDateRange(branchId, start_date as string, end_date as string);
+      res.json(data);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  }  
+
+  static async inventoryStatus(req: AuthRequest, res: Response) {
+    try {
+      const branchId = req.user?.branch_id;
+      if (!branchId) return res.status(400).json({ error: 'branch_id requerido' });
+      const data = await ReportModel.getInventoryStatus(branchId);
+      res.json(data);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  static async salesByCashRegister(req: AuthRequest, res: Response) {
+    try {
+      const branchId = req.user?.branch_id;
+      if (!branchId) return res.status(400).json({ error: 'branch_id requerido' });
+      const data = await ReportModel.getSalesByCashRegister(branchId);
+      res.json(data);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  }
   
-  // Más reportes: ganancias vs gastos, inventario bajo, servicios más solicitados, etc.
+  static async salesWithFilters(req: AuthRequest, res: Response) {
+    try {
+      const branchId = req.user?.branch_id;
+      const { start_date, end_date, product_id, service_id } = req.query;
+      if (!branchId || !start_date || !end_date) {
+        return res.status(400).json({ error: 'branch_id, start_date y end_date son requeridos' });
+      }
+      const data = await ReportModel.getSalesWithFilters(
+        branchId,
+        start_date as string,
+        end_date as string,
+        product_id ? Number(product_id) : undefined,
+        service_id ? Number(service_id) : undefined
+      );
+      res.json(data);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  }
 }

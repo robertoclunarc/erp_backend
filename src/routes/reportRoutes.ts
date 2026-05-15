@@ -17,4 +17,9 @@ router.get('/cash-status', ReportController.cashStatus);
 router.get('/profit-loss', ReportController.profitLoss);
 router.get('/low-stock', ReportController.lowStock);
 
+router.get('/sales-by-range', ReportController.salesByDateRange);
+router.get('/inventory-status', ReportController.inventoryStatus);
+router.get('/sales-by-cash-register', ReportController.salesByCashRegister);
+router.get('/sales-with-filters', ReportController.salesWithFilters);
+
 export default router;
